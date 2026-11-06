@@ -1,0 +1,66 @@
+ULTIMATE MOD - Fabric per Minecraft 26.2 (solo client)
+=================================================
+
+COSA FA
+1) ANIMAZIONI FLUIDE (parte 1)
+   Il colpo (swing) del giocatore e' piu' morbido.
+   /animazioni on | off
+   /animazioni intensita <0-100>
+
+2) WAYPOINT (salvati in config/miamod.json)
+   /wp add <nome>      salva la tua posizione
+   /wp del <nome>      elimina
+   /wp list            elenca con distanza
+   /wp dir <nome>      direzione e distanza
+   /wp track <nome>    freccia + distanza sopra la hotbar, sempre visibile
+   /wp stop            ferma il tracciamento
+
+3) AIUTO PER COSTRUIRE (servono cheat attivi / operatore)
+   /bh pos1            primo angolo (dove sei)
+   /bh pos2            secondo angolo
+   /bh info            dimensioni della selezione
+   /bh fill <blocco>   riempie la selezione
+   /bh hollow <blocco> scatola vuota (max 32768 blocchi)
+   /bh walls <blocco>  solo i 4 muri
+   /bh replace <vecchio> <nuovo>
+   /bh sfera <raggio> <blocco>        sfera piena attorno a te (raggio max 15)
+   /bh sfera_vuota <raggio> <blocco>  sfera vuota
+   /bh cerchio <raggio> <blocco>      anello orizzontale (raggio max 40)
+   /bh stop            ferma i lavori in corso
+   Esempio: /bh fill minecraft:stone_bricks
+   ATTENZIONE: non esiste "annulla". Fai un backup del mondo.
+
+SHADER
+   Non si scrivono dentro una mod. Installa Iris Shaders + uno shader pack
+   (BSL, Complementary...) da Modrinth, se disponibili per 26.2.
+
+PRIMA DI APRIRE IL PROGETTO (importante!)
+Manca il file gradle-wrapper.jar. Per aggiungerlo:
+ 1. Vai su https://fabricmc.net/develop/template e genera un progetto per 26.2
+ 2. Dallo zip copia nella cartella di questa mod:
+      gradlew, gradlew.bat, gradle/wrapper/gradle-wrapper.jar
+
+APRIRE E PROVARE
+ 1. JDK 25 (x64) + IntelliJ IDEA Community
+ 2. IntelliJ -> File -> Open -> questa cartella (attendi Gradle)
+ 3. Esegui "Minecraft Client", oppure nel terminale: gradlew runClient
+
+CREARE IL .JAR
+ gradlew build
+ File: build/libs/ultimatemod-1.0.0.jar (NON quello -sources)
+ Mettilo in mods insieme a Fabric API 0.161.0+26.2
+
+NOTA: il codice NON e' stato compilato ne' testato. Se compare un errore,
+copialo (o il file logs/latest.log) e mandalo a Claude.
+
+
+------------------------------------------------------------
+METODO FACILE: COMPILARE ONLINE CON GITHUB (nessuna installazione)
+ 1. Crea un account gratuito su github.com
+ 2. Premi "+" in alto a destra > New repository. Nome: ultimatemod. Premi Create.
+ 3. Premi "uploading an existing file" e trascina DENTRO il CONTENUTO della cartella
+    UltimateMod (build.gradle, src, .github, ecc. - non la cartella stessa). Premi Commit changes.
+ 4. Apri la scheda "Actions": parte da sola una build "Build" (2-5 minuti).
+ 5. A build finita (spunta verde) apri la build e in fondo, in "Artifacts",
+    scarica UltimateMod-jar. E' uno zip: dentro c'e' ultimatemod-1.0.0.jar.
+ 6. Se la build e' rossa, apri la build, copia l'errore e mandalo a Claude.
