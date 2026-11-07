@@ -6,7 +6,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 
-import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommands;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -21,17 +21,17 @@ import net.minecraft.world.entity.player.Player;
 public class WaypointCommands {
 
 	public static void register(CommandDispatcher<FabricClientCommandSource> d) {
-		d.register(ClientCommandManager.literal("wp")
-				.then(ClientCommandManager.literal("add")
-						.then(ClientCommandManager.argument("nome", StringArgumentType.word()).executes(WaypointCommands::add)))
-				.then(ClientCommandManager.literal("del")
-						.then(ClientCommandManager.argument("nome", StringArgumentType.word()).executes(WaypointCommands::del)))
-				.then(ClientCommandManager.literal("list").executes(WaypointCommands::list))
-				.then(ClientCommandManager.literal("dir")
-						.then(ClientCommandManager.argument("nome", StringArgumentType.word()).executes(WaypointCommands::dir)))
-				.then(ClientCommandManager.literal("track")
-						.then(ClientCommandManager.argument("nome", StringArgumentType.word()).executes(WaypointCommands::track)))
-				.then(ClientCommandManager.literal("stop").executes(ctx -> {
+		d.register(ClientCommands.literal("wp")
+				.then(ClientCommands.literal("add")
+						.then(ClientCommands.argument("nome", StringArgumentType.word()).executes(WaypointCommands::add)))
+				.then(ClientCommands.literal("del")
+						.then(ClientCommands.argument("nome", StringArgumentType.word()).executes(WaypointCommands::del)))
+				.then(ClientCommands.literal("list").executes(WaypointCommands::list))
+				.then(ClientCommands.literal("dir")
+						.then(ClientCommands.argument("nome", StringArgumentType.word()).executes(WaypointCommands::dir)))
+				.then(ClientCommands.literal("track")
+						.then(ClientCommands.argument("nome", StringArgumentType.word()).executes(WaypointCommands::track)))
+				.then(ClientCommands.literal("stop").executes(ctx -> {
 					ModConfig.get().tracked = "";
 					ModConfig.save();
 					ctx.getSource().sendFeedback(Component.literal("Tracciamento fermato."));
@@ -62,7 +62,7 @@ public class WaypointCommands {
 		String name = StringArgumentType.getString(ctx, "nome");
 		Player p = ctx.getSource().getPlayer();
 		BlockPos pos = p.blockPosition();
-		String dim = dimName(ctx.getSource().getWorld().dimension());
+		String dim = dimName(ctx.getSource().getPlayer().level().dimension());
 		Waypoint old = find(name);
 		if (old != null) {
 			ModConfig.get().waypoints.remove(old);
@@ -93,7 +93,7 @@ public class WaypointCommands {
 			return 1;
 		}
 		Player p = ctx.getSource().getPlayer();
-		String dim = dimName(ctx.getSource().getWorld().dimension());
+		String dim = dimName(ctx.getSource().getPlayer().level().dimension());
 		for (Waypoint w : ModConfig.get().waypoints) {
 			String extra = w.dimension.equals(dim)
 					? String.format(Locale.ROOT, " - %.0f blocchi", distance(p, w))
@@ -111,7 +111,7 @@ public class WaypointCommands {
 			ctx.getSource().sendFeedback(Component.literal("Waypoint '" + name + "' non trovato."));
 			return 0;
 		}
-		String dim = dimName(ctx.getSource().getWorld().dimension());
+		String dim = dimName(ctx.getSource().getPlayer().level().dimension());
 		if (!w.dimension.equals(dim)) {
 			ctx.getSource().sendFeedback(Component.literal("'" + name + "' e' in un'altra dimensione (" + w.dimension + ")."));
 			return 0;
@@ -146,7 +146,7 @@ public class WaypointCommands {
 		if (w == null || !w.dimension.equals(dimName(client.level.dimension()))) {
 			return;
 		}
-		client.player.displayClientMessage(Component.literal(describe(client.player, w)), true);
+		client.player.sendOverlayMessage(Component.literal(describe(client.player, w)));
 	}
 
 	private static double distance(Player p, Waypoint w) {

@@ -7,7 +7,7 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 
-import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommands;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -37,39 +37,39 @@ public class BuildHelper {
 	}
 
 	public static void register(CommandDispatcher<FabricClientCommandSource> d) {
-		d.register(ClientCommandManager.literal("bh")
-				.then(ClientCommandManager.literal("pos1").executes(ctx -> setPos(ctx, true)))
-				.then(ClientCommandManager.literal("pos2").executes(ctx -> setPos(ctx, false)))
-				.then(ClientCommandManager.literal("info").executes(BuildHelper::info))
-				.then(ClientCommandManager.literal("stop").executes(ctx -> {
+		d.register(ClientCommands.literal("bh")
+				.then(ClientCommands.literal("pos1").executes(ctx -> setPos(ctx, true)))
+				.then(ClientCommands.literal("pos2").executes(ctx -> setPos(ctx, false)))
+				.then(ClientCommands.literal("info").executes(BuildHelper::info))
+				.then(ClientCommands.literal("stop").executes(ctx -> {
 					QUEUE.clear();
 					say(ctx, "Operazione fermata.");
 					return 1;
 				}))
-				.then(ClientCommandManager.literal("fill")
-						.then(ClientCommandManager.argument("blocco", StringArgumentType.greedyString())
+				.then(ClientCommands.literal("fill")
+						.then(ClientCommands.argument("blocco", StringArgumentType.greedyString())
 								.executes(ctx -> region(ctx, "", false))))
-				.then(ClientCommandManager.literal("hollow")
-						.then(ClientCommandManager.argument("blocco", StringArgumentType.greedyString())
+				.then(ClientCommands.literal("hollow")
+						.then(ClientCommands.argument("blocco", StringArgumentType.greedyString())
 								.executes(ctx -> region(ctx, " hollow", true))))
-				.then(ClientCommandManager.literal("walls")
-						.then(ClientCommandManager.argument("blocco", StringArgumentType.greedyString())
+				.then(ClientCommands.literal("walls")
+						.then(ClientCommands.argument("blocco", StringArgumentType.greedyString())
 								.executes(BuildHelper::walls)))
-				.then(ClientCommandManager.literal("replace")
-						.then(ClientCommandManager.argument("vecchio", StringArgumentType.word())
-								.then(ClientCommandManager.argument("nuovo", StringArgumentType.greedyString())
+				.then(ClientCommands.literal("replace")
+						.then(ClientCommands.argument("vecchio", StringArgumentType.word())
+								.then(ClientCommands.argument("nuovo", StringArgumentType.greedyString())
 										.executes(BuildHelper::replace))))
-				.then(ClientCommandManager.literal("sfera")
-						.then(ClientCommandManager.argument("raggio", IntegerArgumentType.integer(1, 15))
-								.then(ClientCommandManager.argument("blocco", StringArgumentType.greedyString())
+				.then(ClientCommands.literal("sfera")
+						.then(ClientCommands.argument("raggio", IntegerArgumentType.integer(1, 15))
+								.then(ClientCommands.argument("blocco", StringArgumentType.greedyString())
 										.executes(ctx -> sphere(ctx, false)))))
-				.then(ClientCommandManager.literal("sfera_vuota")
-						.then(ClientCommandManager.argument("raggio", IntegerArgumentType.integer(2, 15))
-								.then(ClientCommandManager.argument("blocco", StringArgumentType.greedyString())
+				.then(ClientCommands.literal("sfera_vuota")
+						.then(ClientCommands.argument("raggio", IntegerArgumentType.integer(2, 15))
+								.then(ClientCommands.argument("blocco", StringArgumentType.greedyString())
 										.executes(ctx -> sphere(ctx, true)))))
-				.then(ClientCommandManager.literal("cerchio")
-						.then(ClientCommandManager.argument("raggio", IntegerArgumentType.integer(1, 40))
-								.then(ClientCommandManager.argument("blocco", StringArgumentType.greedyString())
+				.then(ClientCommands.literal("cerchio")
+						.then(ClientCommands.argument("raggio", IntegerArgumentType.integer(1, 40))
+								.then(ClientCommands.argument("blocco", StringArgumentType.greedyString())
 										.executes(BuildHelper::circle)))));
 	}
 
